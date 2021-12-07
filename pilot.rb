@@ -3,35 +3,37 @@
 class Pilot
   class << self
     def run(input)
+      position = {
+        horizontal: 0,
+        depth: 0,
+        aim: 0
+      }
+
       parsed_input = input.split("\n")
-      parsed_movements = parsed_input.map { |input| _parse_movement(input) }
-      _aggregate_movements(parsed_movements)
-    end
 
-    def _parse_movement(command)
-      commands = command.split(' ')
-      distance = commands[1].to_i
-
-      case commands[0]
-      when 'forward'
-        return [distance, 0]
-      when 'down'
-        return [0, distance]
-      when 'up'
-        return [0, -distance]
+      parsed_input.each do |input|
+        position = _move(position, input)
       end
 
-      raise "Command #{commands[0]} not recognized!"
+      position
     end
 
-    def _aggregate_movements(movements)
-      forwards = movements.map { |movement| movement[0] }
-      depths = movements.map { |movement| movement[1] }
+    def _move(position, command)
+      command = command.split(' ')
+      direction = command[0]
+      magnitude = command[1].to_i
 
-      [
-        forwards.reduce(:+),
-        depths.reduce(:+)
-      ]
+      case direction
+      when 'forward'
+        position[:horizontal] = position[:horizontal] + magnitude
+        position[:depth] = position[:depth] + (position[:aim] * magnitude)
+      when 'down'
+        position[:aim] = position[:aim] + magnitude
+      when 'up'
+        position[:aim] = position[:aim] - magnitude
+      end
+
+      position
     end
   end
 end
