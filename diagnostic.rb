@@ -25,11 +25,17 @@ class Diagnostic
     end
 
     def _epsilon_rate(report)
+      readings = report.split("\n")
+      binary_length = readings.first.length
+      mask = []
+      binary_length.times { |_i| mask << '1' }
+      mask = mask.join
+
       # Invert the bits from the gamma rate
       # The NOT (~) operator does not return the underlying bits, but the mathematical represenation of a number in a given base
       # We explicitly XOR the binary string instead
       gamma = _gamma_rate(report).to_i(2)
-      (gamma ^ '11111'.to_i(2)).to_s(2)
+      (gamma ^ mask.to_i(2)).to_s(2)
     end
 
     def _mask(number)

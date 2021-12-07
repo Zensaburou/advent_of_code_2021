@@ -15,7 +15,7 @@ class TestDiagnostic < MiniTest::Unit::TestCase
     input = "1100\n1010\n0011"
 
     result = Diagnostic._epsilon_rate(input)
-    assert_equal('10101', result)
+    assert_equal('101', result)
   end
 
   def test_mask
